@@ -34,5 +34,8 @@ export type UserProfile = {
   likes: string;
   bio: string;
   badges: string[];
+  likedList: string[];
+  favoriteList: string[];
+  historyList: string[];
 };
 

@@ -23,7 +23,7 @@ const FollowingView = () => {
           我的关注 ({FOLLOWED_USERS.length})
         </h2>
 
-        <FollowedUserCard
+        {/* <FollowedUserCard
           user={{
             id: null,
             name: '全部关注',
@@ -31,7 +31,7 @@ const FollowingView = () => {
           }}
           isSelected={selectedUserId === null}
           onClick={setSelectedUserId}
-        />
+        /> */}
 
         {FOLLOWED_USERS.map((user) => (
           <FollowedUserCard
