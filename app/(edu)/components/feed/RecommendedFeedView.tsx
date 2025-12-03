@@ -57,7 +57,7 @@ const RecommendedFeedView = ({ videos }: RecommendedFeedViewProps) => {
       >
         {videos.map((video, index) => (
           <SwiperSlide key={`${video.id}-${index}`}>
-            <div className="w-full h-[calc(100vh-64px)] flex items-center justify-center p-4 xl:p-6">
+            <div className="w-full h-[calc(100vh-64px)] flex items-center justify-center p-4 xl:p-8">
               <FeedVideoItem video={video} isActive={index === activeIndex} />
             </div>
           </SwiperSlide>
