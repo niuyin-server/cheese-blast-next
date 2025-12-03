@@ -3,6 +3,7 @@
 import { Bookmark, Heart, History, ThumbsUp, UserPlus } from 'lucide-react';
 
 import type { UserProfile } from '@/types/content';
+import ThemeToggle from '@/app/(edu)/components/layout/ThemeToggle';
 
 type UserHoverCardProps = {
   profile: UserProfile;
@@ -66,7 +67,7 @@ const UserHoverCard = ({ profile, onMouseEnter, onMouseLeave }: UserHoverCardPro
       </div>
     </div>
 
-    <div className="mt-4 space-y-3">
+    <div className="mt-4 mb-4 space-y-3">
       {listConfig.map(({ title, icon: Icon, key }) => (
         <div key={key}>
           <div className="mb-1 flex items-center space-x-2 text-sm font-medium text-[var(--color-text-secondary)]">
@@ -91,10 +92,8 @@ const UserHoverCard = ({ profile, onMouseEnter, onMouseLeave }: UserHoverCardPro
       ))}
     </div>
 
-    <button className="mt-4 flex w-full items-center justify-center space-x-2 rounded-xl bg-[var(--color-accent)] py-2 text-sm font-medium text-[var(--color-accent-contrast)] shadow-lg shadow-[var(--color-accent)]/30 transition-transform hover:-translate-y-0.5">
-      <UserPlus size={16} />
-      <span>加入关注</span>
-    </button>
+    <ThemeToggle />
+
   </div>
 );
 

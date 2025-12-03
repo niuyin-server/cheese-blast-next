@@ -52,29 +52,27 @@ const Header = ({ profile }: HeaderProps) => {
             className="absolute left-4 top-2.5 text-[var(--color-text-tertiary)] transition-colors group-hover:text-[var(--color-text-secondary)]"
             size={18}
           />
-          <button className="absolute right-2 top-1.5 rounded-full bg-[var(--color-accent)] px-3 py-1.5 text-xs text-[var(--color-accent-contrast)] transition-opacity hover:opacity-90">
+          <button className="absolute right-2 top-1.5 rounded-full cursor-pointer bg-[var(--color-accent)] px-3 py-1.5 text-xs text-[var(--color-accent-contrast)] transition-opacity hover:opacity-90">
             搜索
           </button>
         </div>
       </div>
 
       <div className="ml-6 flex items-center space-x-4">
-        <button className="flex items-center space-x-1 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2 font-medium text-white shadow-lg shadow-blue-500/20 transition-all hover:brightness-110">
+        <button className="flex items-center space-x-1 rounded-full cursor-pointer bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-1 font-medium text-sm text-white shadow-md shadow-blue-500/20 transition-all hover:brightness-110">
           <Plus size={18} />
           <span className="hidden sm:inline">投稿</span>
         </button>
 
         <div className="hidden items-center space-x-5 text-[var(--color-text-secondary)] sm:flex">
-          <button className="relative transition-colors hover:text-[var(--color-text-primary)]">
+          <button className="relative transition-colors hover:text-[var(--color-text-primary)] cursor-pointer">
             <Bell size={22} />
             <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
           </button>
-          <button className="transition-colors hover:text-[var(--color-text-primary)]">
+          <button className="transition-colors hover:text-[var(--color-text-primary)] cursor-pointer">
             <MessageCircle size={22} />
           </button>
         </div>
-
-        <ThemeToggle />
 
         <div
           className="relative rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-0.5"
@@ -83,7 +81,7 @@ const Header = ({ profile }: HeaderProps) => {
         >
           <img
             src={profile.avatar}
-            className="h-9 w-9 rounded-full bg-black object-cover"
+            className="h-9 w-9 rounded-full bg-black object-cover cursor-pointer"
             alt={profile.name}
           />
           {isHoveringAvatar && (

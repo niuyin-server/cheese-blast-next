@@ -36,9 +36,9 @@ const Sidebar = ({ activePath }: SidebarProps) => (
           <Link
             key={href}
             href={href}
-            className={`w-full flex items-center justify-center lg:justify-start space-x-0 lg:space-x-3 p-3 rounded-xl transition-all ${
+            className={`w-full flex items-center justify-center lg:justify-start space-x-0 lg:space-x-3 p-3 rounded-full transition-all ${
               isActive
-                ? 'bg-[var(--color-card)] text-[var(--color-text-primary)] font-medium border border-[var(--color-border-soft)]'
+                ? 'bg-[var(--color-card)] text-[var(--color-text-primary)] font-medium'
                 : 'text-[var(--color-text-tertiary)] hover:bg-[var(--color-card)] hover:text-[var(--color-text-primary)]'
             }`}
           >
@@ -50,7 +50,7 @@ const Sidebar = ({ activePath }: SidebarProps) => (
     </nav>
 
     <div className="p-4 mt-auto">
-      <button className="hidden w-full rounded-lg border border-[var(--color-border-soft)] bg-[var(--color-card)] py-2 text-sm text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] lg:block">
+      <button className="hidden w-full rounded-full border border-[var(--color-border-soft)] cursor-pointer bg-[var(--color-card)] py-2 text-sm text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] lg:block">
         创作者中心
       </button>
     </div>

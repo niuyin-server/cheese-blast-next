@@ -1,24 +1,60 @@
 'use client';
 
+import { useState } from 'react';
 import { BookOpen, Heart, MoreHorizontal, Play } from 'lucide-react';
 
 import { Video } from '@/types/content';
+import { getVideoCoverUrl } from '../utils/imageUtils';
 
 type VideoCardProps = {
   video: Video;
   onClick: (video: Video) => void;
 };
 
-const VideoCard = ({ video, onClick }: VideoCardProps) => (
-  <div
-    onClick={() => onClick(video)}
-    className="group relative bg-gray-900 rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-900/10 transition-all duration-300"
-  >
-    <div className="aspect-[3/4] relative overflow-hidden">
-      <div
-        className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
-        style={{ background: video.coverUrl }}
-      />
+const VideoCard = ({ video, onClick }: VideoCardProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  // 获取图片 URL（如果是渐变背景，则转换为网络图片）
+  const imageUrl = getVideoCoverUrl(video.id, video.coverUrl);
+  
+  // 判断是否是网络图片链接
+  const isImageUrl = imageUrl.startsWith('http://') || 
+                     imageUrl.startsWith('https://') ||
+                     imageUrl.startsWith('//');
+
+  return (
+    <div
+      onClick={() => onClick(video)}
+      className="group relative bg-gray-900 rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-900/10 transition-all duration-300"
+    >
+      <div className="aspect-[3/4] relative overflow-hidden">
+        {isImageUrl && !imageError ? (
+          <>
+            {!imageLoaded && (
+              <div className="w-full h-full bg-gray-800 animate-pulse flex items-center justify-center">
+                <div className="text-gray-600 text-xs">加载中...</div>
+              </div>
+            )}
+            <img
+              src={imageUrl}
+              alt={video.title}
+              className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0 absolute'
+              }`}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(true);
+              }}
+            />
+          </>
+        ) : (
+          <div
+            className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+            style={{ background: video.coverUrl }}
+          />
+        )}
 
       <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md text-[10px] flex items-center border border-white/5">
         <BookOpen size={10} className="mr-1 text-cyan-400" />
@@ -61,7 +97,8 @@ const VideoCard = ({ video, onClick }: VideoCardProps) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 export default VideoCard;
 

@@ -51,3 +51,24 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 200ms ease, color 200ms ease;
 }
+
+/* React Masonry CSS 样式 */
+.masonry-grid {
+  display: flex;
+  width: 100%;
+  margin-left: -16px; /* 负边距抵消列间距 */
+}
+
+.masonry-grid_column {
+  padding-left: 16px; /* 列间距 */
+  background-clip: padding-box;
+}
+
+@media (min-width: 768px) {
+  .masonry-grid {
+    margin-left: -24px;
+  }
+  .masonry-grid_column {
+    padding-left: 24px;
+  }
+}

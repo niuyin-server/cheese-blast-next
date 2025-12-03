@@ -18,8 +18,8 @@ const FollowingView = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)] overflow-hidden">
-      <div className="w-1/4 max-w-sm border-r border-white/5 bg-gray-950/70 backdrop-blur-sm overflow-y-auto p-4 space-y-2 flex-shrink-0 custom-scrollbar">
-        <h2 className="text-xl font-bold text-white mb-4 border-b border-white/5 pb-2">
+      <div className="w-1/6 max-w-sm border-r border-[var(--color-border-soft)] bg-[var(--color-bg)] backdrop-blur-sm overflow-y-auto p-4 space-y-2 flex-shrink-0 custom-scrollbar">
+        <h2 className="text-xl font-bold text-[var(--color-text-primary)] mb-4 border-b border-[var(--color-border-soft)] pb-2">
           我的关注 ({FOLLOWED_USERS.length})
         </h2>
 
@@ -43,7 +43,7 @@ const FollowingView = () => {
         ))}
       </div>
 
-      <div className="flex-1 bg-black">
+      <div className="flex-1 bg-[var(--color-bg)]">
         <RecommendedFeedView videos={videosForFeed} />
       </div>
     </div>

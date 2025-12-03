@@ -13,6 +13,7 @@ import {
 
 import { Video } from '@/types/content';
 import ActionButton from './ActionButton';
+import KnowledgeInteractionPanel from './KnowledgeInteractionPanel';
 
 type FeedVideoItemProps = {
   video: Video;
@@ -22,6 +23,7 @@ type FeedVideoItemProps = {
 const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   const [liked, setLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const commentCount =
     parseInt(video.comments.replace('w', '000').replace(',', '')) >= 10000
@@ -29,47 +31,50 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
       : '1000';
 
   return (
-    <div className="w-full h-full flex flex-row items-center justify-center">
+    <div className="w-full h-full flex flex-row items-center justify-center relative">
       <div
-        className={`relative flex-1 h-full flex items-center justify-center ${video.color} rounded-l-xl md:rounded-l-2xl overflow-hidden`}
+        className={`relative h-full flex items-center justify-center ${video.color} overflow-hidden transition-[width] duration-300 ease-in-out ${isPanelOpen
+            ? 'flex-1 lg:w-[70%] rounded-l-xl md:rounded-l-2xl'
+            : 'w-full rounded-xl md:rounded-2xl'
+          }`}
       >
         <div
           className="absolute inset-0 opacity-20 blur-3xl"
           style={{ background: video.coverUrl }}
         ></div>
 
-        <div className="relative z-10 h-full w-full max-w-sm bg-black flex items-center justify-center shadow-2xl">
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50 text-2xl font-mono select-none">
+        <div className="relative z-10 h-full w-full flex items-center justify-center shadow-2xl">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-[var(--color-text-tertiary)] text-2xl font-mono select-none">
             <div className="text-7xl mb-4">📹</div>
             <p>{isActive ? '正在播放...' : '暂停中...'}</p>
           </div>
 
           <div className="absolute inset-0 p-4 flex flex-col justify-end">
-            <div className="text-white drop-shadow-lg mb-4">
+            <div className="text-[var(--color-text-primary)] drop-shadow-lg mb-4">
               <div className="flex items-center mb-2">
                 <img
                   src={video.authorAvatar}
-                  className="w-10 h-10 rounded-full border-2 border-white/50 mr-2"
+                  className="w-10 h-10 rounded-full border-2 border-[var(--color-border-soft)] mr-2"
                   alt="Author"
                 />
                 <span className="font-bold text-lg hover:underline cursor-pointer">
                   {video.author}
                 </span>
-                <button className="ml-3 bg-red-600 hover:bg-red-500 text-xs px-3 py-1 rounded-full">
+                <button className="ml-3 bg-red-600 hover:bg-red-500 text-white text-xs px-3 py-1 rounded-full">
                   关注
                 </button>
               </div>
               <p className="text-lg font-semibold leading-snug mb-2">
                 {video.title}
               </p>
-              <p className="text-sm line-clamp-1">
+              <p className="text-sm line-clamp-1 text-[var(--color-text-secondary)]">
                 {video.description.split('#')[0]}
               </p>
               <div className="flex flex-wrap gap-2 mt-1">
                 {video.description.match(/#\w+/g)?.map((tag, i) => (
                   <span
                     key={i}
-                    className="text-cyan-400 text-sm hover:underline cursor-pointer"
+                    className="text-[var(--color-accent)] text-sm hover:underline cursor-pointer"
                   >
                     {tag}
                   </span>
@@ -79,6 +84,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
           </div>
 
           <div className="absolute right-0 bottom-0 p-4 space-y-6 flex flex-col items-center">
+            {/* 点赞图标 */}
             <ActionButton
               icon={Heart}
               label={video.likes}
@@ -86,69 +92,27 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
               onClick={() => setLiked(!liked)}
               activeColor="text-red-500"
             />
-            <ActionButton icon={MessageCircle} label={commentCount} />
+            {/* 评论图标 */}
+            <ActionButton 
+              icon={MessageCircle}
+              label={commentCount}
+              isActive={isPanelOpen}
+              onClick={() => setIsPanelOpen(!isPanelOpen)}
+              activeColor="text-[var(--color-accent)]"
+            />
             <ActionButton icon={BookOpen} label="知识点" />
             <ActionButton icon={Share2} label="分享" />
             <button
               onClick={() => setIsMuted(!isMuted)}
-              className="text-white hover:text-gray-300 transition-colors p-2 bg-black/40 rounded-full backdrop-blur-sm"
+              className="cursor-pointer text-[var(--color-text-primary)] hover:text-[var(--color-text-secondary)] transition-colors p-2 bg-[var(--color-card)] rounded-full backdrop-blur-sm"
             >
               {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
           </div>
-
-          {video.quiz && (
-            <div className="absolute top-4 right-4 z-20">
-              <button className="bg-orange-500 hover:bg-orange-400 text-white px-3 py-1.5 rounded-full shadow-lg flex items-center text-sm font-bold">
-                <CheckCircle2 size={16} className="mr-1" />
-                随堂小测
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="w-[30%] max-w-sm h-full hidden lg:flex flex-col bg-gray-900 border-l border-white/5 p-4 rounded-r-xl md:rounded-r-2xl">
-        <h3 className="text-white font-bold text-lg mb-4">知识互动区</h3>
-        <div className="flex-1 overflow-y-auto space-y-4 custom-scrollbar">
-          <div className="bg-gray-800/50 rounded-lg p-3 border border-white/5">
-            <h4 className="text-cyan-400 text-sm font-bold mb-1 flex items-center">
-              <BookOpen size={14} className="mr-2" /> 本课重点
-            </h4>
-            <p className="text-gray-300 text-xs leading-relaxed">
-              {video.knowledgePoint}
-            </p>
-          </div>
-
-          <h4 className="text-white text-sm font-bold mt-4">
-            评论 ({video.comments})
-          </h4>
-          {[
-            { u: '学霸小明', t: '讲得太清楚了！终于明白了。', l: 123 },
-            { u: 'User887', t: '收藏了，考试前复习。', l: 45 },
-          ].map((comment, i) => (
-            <div key={i} className="flex space-x-2">
-              <div className="w-6 h-6 rounded-full bg-gray-700 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="text-gray-400 text-xs font-bold mb-0.5">
-                  {comment.u}
-                </div>
-                <p className="text-gray-200 text-xs leading-relaxed">
-                  {comment.t}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-4">
-          <input
-            type="text"
-            placeholder="发一条友善的评论..."
-            className="w-full bg-gray-800 text-white text-xs rounded-full py-2 px-4 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-          />
-        </div>
-      </div>
+      <KnowledgeInteractionPanel video={video} isExpanded={isPanelOpen} />
     </div>
   );
 };
