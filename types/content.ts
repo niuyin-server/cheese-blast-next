@@ -15,8 +15,17 @@ export type Video = {
   description: string;
   color: string;
   coverUrl: string;
+  coverImage?: string;
   knowledgePoint: string;
   quiz: Quiz | null;
+  // 扩展字段（来自API）
+  publishType?: '0' | '1'; // '0' 视频, '1' 图片
+  videoUrl?: string;
+  imageList?: string[] | null;
+  viewNum?: number;
+  weatherLike?: boolean;
+  weatherFavorite?: boolean;
+  weatherFollow?: boolean;
 };
 
 export type FollowedUser = {
