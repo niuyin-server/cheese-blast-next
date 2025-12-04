@@ -7,6 +7,7 @@ import {
   Heart,
   MessageCircle,
   Share2,
+  Volume1,
   Volume2,
   VolumeX,
   Play,
@@ -27,7 +28,7 @@ type FeedVideoItemProps = {
 const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   const [liked, setLiked] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const { isMuted, toggleMute } = useVideoAudio();
+  const { isMuted, toggleMute, volume, setVolume } = useVideoAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [playerError, setPlayerError] = useState(false);
@@ -37,6 +38,20 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   const [isSeeking, setIsSeeking] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const readyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 根据音量和静音状态智能选择音量图标
+  const renderVolumeIcon = () => {
+    if (isMuted || volume === 0) {
+      return <VolumeX size={18} />;
+    }
+    if (volume <= 0.33) {
+      return <Volume1 size={18} />;
+    }
+    if (volume <= 0.66) {
+      return <Volume2 size={18} />;
+    }
+    return <Volume2 size={18} className="text-[var(--color-accent)]" />;
+  };
 
   const commentCount =
     parseInt(video.comments.replace('w', '000').replace(',', '')) >= 10000
@@ -227,7 +242,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                 }}
                 ref={videoRef}
                 src={video.videoUrl || ''}
-                muted={isMuted}
+                muted={isMuted || volume === 0}
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-contain z-10"
                 onLoadedMetadata={() => {
@@ -340,6 +355,20 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                     <span className="text-xs font-mono min-w-[42px]">
                       {formatTime(duration)}
                     </span>
+
+                    {/* 音量按钮（仅静音开关，无 Hover 轨道） */}
+                    {!isImageType && hasVideoUrl && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMute();
+                        }}
+                        className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20 backdrop-blur-lg text-white hover:bg-white/20 dark:hover:bg-gray-900/20 transition-all duration-200"
+                        aria-label="音量"
+                      >
+                        {renderVolumeIcon()}
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -403,14 +432,6 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
             />
             <ActionButton icon={BookOpen} label="" />
             <ActionButton icon={Share2} label="" />
-            {!isImageType && hasVideoUrl && (
-              <button
-                onClick={toggleMute}
-                className="cursor-pointer text-white hover:text-white/80 transition-colors p-2 bg-[var(--color-card)] rounded-full backdrop-blur-sm"
-              >
-                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </button>
-            )}
           </div>
         </div>
       </div>
