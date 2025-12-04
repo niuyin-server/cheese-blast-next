@@ -36,8 +36,13 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [seekValue, setSeekValue] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isTimelineExpanded, setIsTimelineExpanded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const readyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const controlsHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 已播放进度百分比，用于美化进度条（已播放部分为白色）
+  const playedPercent = duration > 0 ? Math.min(100, Math.max(0, (seekValue / duration) * 100)) : 0;
 
   // 根据音量和静音状态智能选择音量图标
   const renderVolumeIcon = () => {
@@ -172,6 +177,28 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   // 同步播放状态到 video 元素（仅在手动控制时使用）
   // 注意：video 元素的 onPlay/onPause 事件会自动同步状态，这里主要用于外部控制
 
+  // 显示进度条完整控件，并在 3 秒无操作后自动收起
+  const showTimelineControls = () => {
+    setIsTimelineExpanded(true);
+    if (controlsHideTimeoutRef.current) {
+      clearTimeout(controlsHideTimeoutRef.current);
+      controlsHideTimeoutRef.current = null;
+    }
+    controlsHideTimeoutRef.current = setTimeout(() => {
+      setIsTimelineExpanded(false);
+    }, 3000);
+  };
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (controlsHideTimeoutRef.current) {
+        clearTimeout(controlsHideTimeoutRef.current);
+        controlsHideTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full h-full flex flex-row items-center justify-center relative">
       <div
@@ -210,7 +237,17 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
               <ImageCarousel images={video.imageList!} />
             </div>
           ) : hasVideoUrl ? (
-            <div className="absolute inset-0 w-full h-full z-20 group">
+            <div
+              className="absolute inset-0 w-full h-full z-20 group"
+              onMouseMove={showTimelineControls}
+              onMouseLeave={() => {
+                setIsTimelineExpanded(false);
+                if (controlsHideTimeoutRef.current) {
+                  clearTimeout(controlsHideTimeoutRef.current);
+                  controlsHideTimeoutRef.current = null;
+                }
+              }}
+            >
               <div className={`absolute inset-0 flex items-center justify-center bg-black/50 z-30 transition-opacity duration-300 ${isReady ? 'opacity-0 pointer-events-none' : 'opacity-100'
                 }`}>
                 <div className="text-white text-sm">加载中...</div>
@@ -314,11 +351,83 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                 }}
               />
               {duration > 0 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[80%] max-w-2xl z-30">
-                  <div className="flex items-center text-white/80 hover:text-white transition-colors duration-300 space-x-3 bg-black/35 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10 shadow-lg">
-                    <span className="text-xs font-mono min-w-[42px] text-right">
-                      {formatTime(currentTime)}
-                    </span>
+                <>
+                  {/* 展开状态：完整时长控件，悬浮在底部上方，带缩放/位移动画 */}
+                  <div
+                    className={`absolute bottom-4 left-1/2 -translate-x-1/2 w-[80%] max-w-2xl z-30 transition-all duration-300 ease-out transform ${
+                      isTimelineExpanded
+                        ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
+                        : 'opacity-0 translate-y-3 scale-95 pointer-events-none'
+                    }`}
+                  >
+                    <div className="flex items-center text-white/80 hover:text-white transition-colors duration-300 space-x-3 bg-black/35 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10 shadow-lg">
+                        <span className="text-xs font-mono min-w-[42px] text-right">
+                          {formatTime(currentTime)}
+                        </span>
+                        <input
+                          type="range"
+                          min={0}
+                          max={duration}
+                          step={0.01}
+                          value={seekValue}
+                          onMouseDown={() => setIsSeeking(true)}
+                          onTouchStart={() => setIsSeeking(true)}
+                          onChange={(e) => {
+                            const value = parseFloat(e.target.value);
+                            setSeekValue(value);
+                            if (videoRef.current) {
+                              videoRef.current.currentTime = value;
+                            }
+                          }}
+                          onMouseUp={(e) => {
+                            const value = parseFloat(e.currentTarget.value);
+                            setIsSeeking(false);
+                            setCurrentTime(value);
+                            if (videoRef.current) {
+                              videoRef.current.currentTime = value;
+                            }
+                          }}
+                          onTouchEnd={(e) => {
+                            const value = parseFloat((e.target as HTMLInputElement).value);
+                            setIsSeeking(false);
+                            setCurrentTime(value);
+                            if (videoRef.current) {
+                              videoRef.current.currentTime = value;
+                            }
+                          }}
+                           className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
+                           style={{
+                             background: `linear-gradient(to right, #ffffff 0%, #ffffff ${playedPercent}%, rgba(255,255,255,0.25) ${playedPercent}%, rgba(255,255,255,0.25) 100%)`,
+                           }}
+                        />
+                        <span className="text-xs font-mono min-w-[42px]">
+                          {formatTime(duration)}
+                        </span>
+
+                        {/* 音量按钮（仅静音开关） */}
+                        {!isImageType && hasVideoUrl && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleMute();
+                            }}
+                            className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20 backdrop-blur-lg text-white hover:bg-white/20 dark:hover:bg-gray-900/20 transition-all duration-200"
+                            aria-label="音量"
+                          >
+                            {renderVolumeIcon()}
+                          </button>
+                        )}
+                    </div>
+                  </div>
+
+                  {/* 收起状态：仅保留紧贴底部的一条进度条轨道，带淡入淡出/位移动画 */}
+                  <div
+                    className={`absolute inset-x-0 bottom-0 z-30 transition-all duration-300 ease-out transform ${
+                      isTimelineExpanded
+                        ? 'opacity-0 translate-y-full pointer-events-none'
+                        : 'opacity-100 translate-y-0 pointer-events-auto'
+                    }`}
+                  >
                     <input
                       type="range"
                       min={0}
@@ -350,27 +459,13 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                           videoRef.current.currentTime = value;
                         }
                       }}
-                      className="flex-1 h-1.5 rounded-full appearance-none bg-white/15 cursor-pointer accent-[var(--color-accent)]"
+                       className="w-full h-1 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
+                       style={{
+                         background: `linear-gradient(to right, #ffffff 0%, #ffffff ${playedPercent}%, rgba(0,0,0,0.4) ${playedPercent}%, rgba(0,0,0,0.4) 100%)`,
+                       }}
                     />
-                    <span className="text-xs font-mono min-w-[42px]">
-                      {formatTime(duration)}
-                    </span>
-
-                    {/* 音量按钮（仅静音开关，无 Hover 轨道） */}
-                    {!isImageType && hasVideoUrl && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleMute();
-                        }}
-                        className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20 backdrop-blur-lg text-white hover:bg-white/20 dark:hover:bg-gray-900/20 transition-all duration-200"
-                        aria-label="音量"
-                      >
-                        {renderVolumeIcon()}
-                      </button>
-                    )}
                   </div>
-                </div>
+                </>
               )}
             </div>
           ) : (
@@ -380,7 +475,8 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
             </div>
           )}
           <div className="absolute inset-0 p-4 flex flex-col justify-end">
-            <div className="text-white drop-shadow-lg mb-8 z-100">
+            {/* 作者信息和视频信息区域：宽度随内容收缩，而不是占满 100% */}
+            <div className="text-white drop-shadow-lg mb-8 z-100 w-fit max-w-[80%]">
               <div className="flex items-center mb-2">
                 <img
                   src={video.authorAvatar}
