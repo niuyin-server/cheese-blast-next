@@ -12,7 +12,7 @@ type KnowledgeInteractionPanelProps = {
 const KnowledgeInteractionPanel = ({ video, isExpanded }: KnowledgeInteractionPanelProps) => {
   return (
     <div
-      className={`h-full hidden lg:flex flex-col bg-[var(--color-surface)] border-l border-[var(--color-border-soft)] rounded-r-xl md:rounded-r-2xl overflow-hidden transition-[width] duration-300 ease-in-out ${
+      className={`h-full hidden lg:flex flex-col bg-[var(--color-surface)] border-l border-[var(--color-border-soft)] rounded-r-xl md:rounded-r-2xl overflow-hidden transition-[width] duration-300 ease ${
         isExpanded 
           ? 'w-[30%] max-w-sm' 
           : 'w-0 pointer-events-none'

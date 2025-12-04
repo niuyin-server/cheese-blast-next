@@ -202,7 +202,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   return (
     <div className="w-full h-full flex flex-row items-center justify-center relative">
       <div
-        className={`relative h-full flex items-center justify-center overflow-hidden transition-[width] duration-300 ease-in-out ${isPanelOpen
+        className={`relative h-full flex items-center justify-center overflow-hidden transition-[width] duration-300 ease ${isPanelOpen
           ? 'flex-1 lg:w-[70%] rounded-l-xl md:rounded-l-2xl'
           : 'w-full rounded-xl md:rounded-2xl'
           }`}
