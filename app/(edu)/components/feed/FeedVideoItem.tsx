@@ -360,7 +360,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                         : 'opacity-0 translate-y-3 scale-95 pointer-events-none'
                     }`}
                   >
-                    <div className="flex items-center text-white/80 hover:text-white transition-colors duration-300 space-x-3 bg-black/35 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10 shadow-lg">
+                    <div className="timeline-group flex items-center text-white/80 hover:text-white transition-colors duration-300 space-x-3 bg-black/35 backdrop-blur-xl rounded-full px-4 py-2 border border-white/10 shadow-lg">
                         <span className="text-xs font-mono min-w-[42px] text-right">
                           {formatTime(currentTime)}
                         </span>
@@ -395,7 +395,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                               videoRef.current.currentTime = value;
                             }
                           }}
-                           className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
+                           className="timeline-range flex-1 h-1.5 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
                            style={{
                              background: `linear-gradient(to right, #ffffff 0%, #ffffff ${playedPercent}%, rgba(255,255,255,0.25) ${playedPercent}%, rgba(255,255,255,0.25) 100%)`,
                            }}
@@ -411,7 +411,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                               e.stopPropagation();
                               toggleMute();
                             }}
-                            className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20 backdrop-blur-lg text-white hover:bg-white/20 dark:hover:bg-gray-900/20 transition-all duration-200"
+                            className="flex items-center cursor-pointer justify-center w-8 h-8 rounded-full bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20 backdrop-blur-lg text-white hover:bg-white/20 dark:hover:bg-gray-900/20 transition-all duration-200"
                             aria-label="音量"
                           >
                             {renderVolumeIcon()}
@@ -422,7 +422,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
 
                   {/* 收起状态：仅保留紧贴底部的一条进度条轨道，带淡入淡出/位移动画 */}
                   <div
-                    className={`absolute inset-x-0 bottom-0 z-30 transition-all duration-300 ease-out transform ${
+                    className={`absolute inset-x-0 bottom-0 z-30 transition-all duration-300 ease-out transform leading-[0] ${
                       isTimelineExpanded
                         ? 'opacity-0 translate-y-full pointer-events-none'
                         : 'opacity-100 translate-y-0 pointer-events-auto'
@@ -459,7 +459,7 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                           videoRef.current.currentTime = value;
                         }
                       }}
-                       className="w-full h-1 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
+                       className="timeline-range w-full h-1 rounded-full appearance-none cursor-pointer accent-[var(--color-accent)]"
                        style={{
                          background: `linear-gradient(to right, #ffffff 0%, #ffffff ${playedPercent}%, rgba(0,0,0,0.4) ${playedPercent}%, rgba(0,0,0,0.4) 100%)`,
                        }}

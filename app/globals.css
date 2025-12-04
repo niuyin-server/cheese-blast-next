@@ -72,3 +72,59 @@ body {
     padding-left: 24px;
   }
 }
+
+/* --------------------------- */
+/* 视频进度条自定义样式       */
+/* 默认隐藏滑块，仅在 hover 时展示 */
+/* --------------------------- */
+
+.timeline-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  outline: none;
+  height: 5px;
+  transition: height 150ms ease;
+}
+
+.timeline-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  opacity: 0;
+  transition: opacity 150ms ease, width 150ms ease, height 150ms ease, transform 150ms ease;
+}
+
+.timeline-range::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  border: none;
+  opacity: 0;
+  transition: opacity 150ms ease, width 150ms ease, height 150ms ease, transform 150ms ease;
+}
+
+.timeline-group:hover .timeline-range::-webkit-slider-thumb,
+.timeline-range:hover::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.timeline-group:hover .timeline-range::-moz-range-thumb,
+.timeline-range:hover::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.timeline-group:hover .timeline-range,
+.timeline-range:hover {
+  height: 8px;
+}
