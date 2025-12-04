@@ -74,12 +74,12 @@ const VideoPlayerModal = ({ video, onClose }: VideoPlayerModalProps) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       <button
         onClick={onClose}
-        className="absolute cursor-pointer top-4 right-4 z-50 p-2 rounded-full transition-colors bg-[var(--color-icon-bg)] hover:bg-[var(--color-icon-bg-hover)] text-[var(--color-text-primary)] border border-[var(--color-border-soft)]"
+        className="absolute cursor-pointer top-6 right-6 z-50 p-2 rounded-full transition-colors bg-[var(--color-icon-bg)] hover:bg-[var(--color-icon-bg-hover)] text-[var(--color-text-primary)] border border-[var(--color-border-soft)]"
       >
         <X size={24} />
       </button>
 
-      <div className="w-full h-full md:w-[90%] md:h-[90%] md:max-w-7xl flex flex-col md:flex-row bg-[var(--color-bg)] md:rounded-2xl overflow-hidden shadow-2xl border border-[var(--color-border-soft)]">
+      <div className="w-full h-full md:w-[78%] md:h-[86%]  flex flex-col md:flex-row bg-[var(--color-bg)] md:rounded-2xl overflow-hidden shadow-xl border border-[var(--color-border-soft)]">
         <div className={`relative flex-1 ${video.color} flex items-center justify-center overflow-hidden`}>
           <div className="absolute inset-0 opacity-30 blur-3xl" style={{ background: video.coverUrl }}></div>
 
