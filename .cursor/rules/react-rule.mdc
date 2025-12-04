@@ -1,0 +1,59 @@
+---
+alwaysApply: true
+---
+
+
+# 项目开发规范
+
+## 样式规则
+1. 所有交互元素必须包含玻璃态效果
+2. 按钮和小方块使用 `rounded-full`
+3. 卡片使用 `rounded-xl` 或 `rounded-2xl`
+4. 必须同时定义白天和夜晚模式
+
+## 颜色使用
+- 白天模式: text-gray-800, bg-white/10
+- 夜晚模式: dark:text-white, dark:bg-gray-900/10
+
+## 图标使用
+```javascript
+import { IconName } from 'lucide-react';
+```
+
+{
+  "project": {
+    "framework": "react",
+    "styling": "twindcss",
+    "icons": "lucide-react",
+    "uiStyle": "glass-morphism"
+  },
+  "rules": {
+    "styling": {
+      "glassEffect": "使用 backdrop-blur-lg bg-white/10 dark:bg-gray-900/10 border border-white/20 dark:border-gray-700/20",
+      "smallElements": "按钮和小方形元素使用 rounded-full",
+      "largeCards": "大卡片元素使用 rounded-xl 或 rounded-2xl",
+      "darkMode": "所有颜色必须同时定义白天和夜晚模式"
+    },
+    "components": {
+      "icons": "必须从 'lucide-react' 导入图标",
+      "buttons": "按钮必须包含 hover 和 active 状态",
+      "cards": "卡片必须包含玻璃态效果"
+    },
+    <!-- "colors": {
+      "light": {
+        "primary": "#3b82f6",
+        "secondary": "#8b5cf6",
+        "background": "#ffffff",
+        "surface": "#f8fafc",
+        "text": "#1e293b"
+      },
+      "dark": {
+        "primary": "#60a5fa",
+        "secondary": "#a78bfa",
+        "background": "#0f172a",
+        "surface": "#1e293b",
+        "text": "#f1f5f9"
+      }
+    } -->
+  }
+}

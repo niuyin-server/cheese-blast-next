@@ -17,6 +17,7 @@ export const THEME_COLORS: Record<ThemeMode, ThemeVariables> = {
     '--color-text-tertiary': '#64748b',
     '--color-accent': '#0f172a',
     '--color-accent-contrast': '#f8fafc',
+    '--color-action-icon-bg': 'rgba(239, 239, 239, 0.2)',
   },
   dark: {
     '--color-bg': 'rgba(22, 24, 35, 0.9)',
@@ -32,6 +33,7 @@ export const THEME_COLORS: Record<ThemeMode, ThemeVariables> = {
     '--color-text-tertiary': '#94a3b8',
     '--color-accent': '#38bdf8',
     '--color-accent-contrast': '#020617',
+    '--color-action-icon-bg': 'rgba(18, 20, 65, 0.2)',
   },
 };
 

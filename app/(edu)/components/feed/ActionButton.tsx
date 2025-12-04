@@ -15,15 +15,15 @@ const ActionButton = ({
   label,
   isActive,
   onClick,
-  activeColor = 'text-[var(--color-text-primary)]',
+  activeColor = 'text-white',
 }: ActionButtonProps) => (
   <button
     onClick={onClick}
-    className={`flex flex-col cursor-pointer items-center space-y-1 text-[var(--color-text-primary)] hover:text-[var(--color-text-secondary)] transition-colors drop-shadow-lg ${
-      isActive ? activeColor : 'text-[var(--color-text-primary)]'
+    className={`flex flex-col cursor-pointer items-center space-y-1 text-[var(--color-text-primary)] hover:text-white/80 transition-colors drop-shadow-lg ${
+      isActive ? activeColor : 'text-white'
     }`}
   >
-    <div className="p-3 rounded-full bg-[var(--color-card)] backdrop-blur-sm">
+    <div className="p-3 rounded-full bg-[var(--color-action-icon-bg)] backdrop-blur-sm">
       <Icon size={24} className={isActive ? 'fill-current' : ''} />
     </div>
     <span className="text-xs font-semibold">{label}</span>

@@ -7,6 +7,7 @@ import { USER_PROFILE } from "@/app/data/content";
 import Header from "@/app/(edu)/components/layout/Header";
 import Sidebar from "@/app/(edu)/components/layout/Sidebar";
 import { ThemeProvider } from "@/app/(edu)/providers/ThemeProvider";
+import { VideoAudioProvider } from "@/app/(edu)/providers/VideoAudioProvider";
 
 type EduGroupLayoutProps = {
   children: ReactNode;
@@ -17,14 +18,16 @@ export default function EduGroupLayout({ children }: EduGroupLayoutProps) {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] font-sans selection:bg-cyan-500/30">
-        <Header profile={USER_PROFILE} />
-        <Sidebar activePath={pathname} />
+      <VideoAudioProvider>
+        <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text-primary)] font-sans selection:bg-cyan-500/30">
+          <Header profile={USER_PROFILE} />
+          <Sidebar activePath={pathname} />
 
-        <main className="pl-0 md:pl-20 lg:pl-48 pt-16 min-h-screen transition-all duration-300">
-          {children}
-        </main>
-      </div>
+          <main className="pl-0 md:pl-20 lg:pl-48 pt-16 min-h-screen transition-all duration-300">
+            {children}
+          </main>
+        </div>
+      </VideoAudioProvider>
     </ThemeProvider>
   );
 }

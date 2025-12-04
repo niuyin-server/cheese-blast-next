@@ -17,6 +17,7 @@ import { Video } from '@/types/content';
 import ActionButton from './ActionButton';
 import KnowledgeInteractionPanel from './KnowledgeInteractionPanel';
 import ImageCarousel from './ImageCarousel';
+import { useVideoAudio } from '@/app/(edu)/providers/VideoAudioProvider';
 
 type FeedVideoItemProps = {
   video: Video;
@@ -25,8 +26,8 @@ type FeedVideoItemProps = {
 
 const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
   const [liked, setLiked] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { isMuted, toggleMute } = useVideoAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [playerError, setPlayerError] = useState(false);
@@ -227,7 +228,6 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
                 ref={videoRef}
                 src={video.videoUrl || ''}
                 muted={isMuted}
-                loop
                 playsInline
                 className="absolute top-0 left-0 w-full h-full object-contain z-10"
                 onLoadedMetadata={() => {
@@ -351,11 +351,11 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
             </div>
           )}
           <div className="absolute inset-0 p-4 flex flex-col justify-end">
-            <div className="text-[var(--color-text-primary)] drop-shadow-lg mb-4 z-100">
+            <div className="text-white drop-shadow-lg mb-8 z-100">
               <div className="flex items-center mb-2">
                 <img
                   src={video.authorAvatar}
-                  className="w-10 h-10 rounded-full border-2 border-[var(--color-border-soft)] mr-2"
+                  className="w-12 h-12 rounded-full border-2 border-[var(--color-border-soft)] mr-2"
                   alt="Author"
                 />
                 <span className="font-bold text-lg hover:underline cursor-pointer">
@@ -368,14 +368,14 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
               <p className="text-lg font-semibold leading-snug mb-2">
                 {video.title}
               </p>
-              <p className="text-sm line-clamp-1 text-[var(--color-text-secondary)]">
+              <p className="text-sm line-clamp-1 text-white/80">
                 {video.description.split('#')[0]}
               </p>
               <div className="flex flex-wrap gap-2 mt-1">
                 {video.description.match(/#\w+/g)?.map((tag, i) => (
                   <span
                     key={i}
-                    className="text-[var(--color-accent)] text-sm hover:underline cursor-pointer"
+                    className="text-white text-sm hover:underline cursor-pointer"
                   >
                     {tag}
                   </span>
@@ -399,14 +399,14 @@ const FeedVideoItem = ({ video, isActive }: FeedVideoItemProps) => {
               label={commentCount}
               isActive={isPanelOpen}
               onClick={() => setIsPanelOpen(!isPanelOpen)}
-              activeColor="text-[var(--color-accent)]"
+              activeColor="text-white"
             />
-            <ActionButton icon={BookOpen} label="知识点" />
-            <ActionButton icon={Share2} label="分享" />
+            <ActionButton icon={BookOpen} label="" />
+            <ActionButton icon={Share2} label="" />
             {!isImageType && hasVideoUrl && (
               <button
-                onClick={() => setIsMuted(!isMuted)}
-                className="cursor-pointer text-[var(--color-text-primary)] hover:text-[var(--color-text-secondary)] transition-colors p-2 bg-[var(--color-card)] rounded-full backdrop-blur-sm"
+                onClick={toggleMute}
+                className="cursor-pointer text-white hover:text-white/80 transition-colors p-2 bg-[var(--color-card)] rounded-full backdrop-blur-sm"
               >
                 {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
               </button>
