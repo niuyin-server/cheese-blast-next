@@ -10,6 +10,7 @@ alwaysApply: true
 2. 按钮和小方块使用 `rounded-full`
 3. 卡片使用 `rounded-xl` 或 `rounded-2xl`
 4. 必须同时定义白天和夜晚模式
+5. 注重用户交互体验，卡片添加`border`，hover后border颜色加重，需要点击的区域使用`cursor-pointer`
 
 ## 颜色使用
 - 白天模式: text-gray-800, bg-white/10

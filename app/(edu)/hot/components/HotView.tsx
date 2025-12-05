@@ -99,7 +99,7 @@ const HotView = ({ onVideoClick }: HotViewProps) => {
           {HOT_SEARCH_TERMS.map((term, idx) => (
             <button
               key={term}
-              className="group cursor-pointer flex items-center justify-between px-3 py-2 rounded-full text-sm transition-all duration-300 backdrop-blur-lg bg-white/10 dark:bg-gray-400/10 border border-white/20 dark:border-gray-300/20 hover:shadow-md hover:border-white/30 dark:hover:border-gray-400/40"
+              className="group cursor-pointer flex items-center justify-between px-3 py-2 rounded-full text-sm transition-all duration-300 backdrop-blur-lg bg-gray-300/30 dark:bg-gray-300/10 border border-white/10 dark:border-gray-300/20 hover:shadow-md hover:border-white/30 dark:hover:border-gray-400/40"
             >
               <div className="flex items-center space-x-2">
                 <span className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-semibold ${idx < 3 ? 'bg-gradient-to-br from-orange-400 to-rose-500 text-white' : 'bg-white/20 dark:bg-gray-800/40 text-[var(--color-text-primary)]'}`}>
