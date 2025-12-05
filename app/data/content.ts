@@ -316,6 +316,24 @@ export const ALL_VIDEOS: Video[] = generateVideos();
 
 export const HOME_VIDEOS: Video[] = [...ALL_VIDEOS, ...ALL_VIDEOS, ...ALL_VIDEOS];
 
+// 热门页面使用的热搜词条与视频列表
+export const HOT_SEARCH_TERMS: string[] = [
+  "AI大模型",
+  "编程面试",
+  "量子纠缠",
+  "黑神话悟空",
+  "摄影构图",
+  "4K壁纸",
+  "我的世界建筑",
+  "硬核科普",
+  "英语口语",
+  "职场进阶",
+  "运动健身",
+  "音乐治愈",
+];
+
+export const HOT_VIDEOS: Video[] = HOME_VIDEOS.slice(0, 72);
+
 export const USER_PROFILE: UserProfile = {
   name: "好奇心日报",
   id: "curious_daily",
