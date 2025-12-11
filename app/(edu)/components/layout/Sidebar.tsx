@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Compass, Flame, History, Home, Sparkles, User, MessageSquare, Palette } from 'lucide-react';
+import { BookOpen, Compass, Flame, History, Home, Sparkles, User, MessageSquare, Palette, Video } from 'lucide-react';
 
 type SidebarProps = {
   activePath: string;
@@ -17,6 +17,7 @@ const navItems = [
   { icon: User, label: '我的', href: '/profile' },
   { icon: MessageSquare, label: 'AI对话', href: '/chat' },
   { icon: Palette, label: 'AI绘画', href: '/ai-art' },
+  { icon: Video, label: 'AI视频', href: '/ai-video' },
 ];
 
 const Sidebar = ({ activePath }: SidebarProps) => (
