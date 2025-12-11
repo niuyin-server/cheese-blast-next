@@ -53,7 +53,7 @@ const VideoCard = ({ video, onClick, showAuthor = true }: VideoCardProps) => {
         {!imageError ? (
           <>
             {!imageLoaded && (
-              <div className="w-full aspect-[3/4] bg-[var(--color-card)] animate-pulse flex items-center justify-center">
+              <div className="w-full aspect-[16/9] bg-[var(--color-card)] animate-pulse flex items-center justify-center">
                 <div className="text-[var(--color-text-tertiary)] text-sm">加载中...</div>
               </div>
             )}
@@ -63,7 +63,7 @@ const VideoCard = ({ video, onClick, showAuthor = true }: VideoCardProps) => {
               className={`w-full object-cover transition-transform duration-700 group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100' : 'opacity-0 absolute'
               }`}
-              style={{ aspectRatio: '3/4' }}
+              style={{ aspectRatio: '16/9' }}
               onLoad={() => setImageLoaded(true)}
               onError={() => {
                 setImageError(true);
@@ -72,7 +72,7 @@ const VideoCard = ({ video, onClick, showAuthor = true }: VideoCardProps) => {
             />
           </>
         ) : (
-          <div className="w-full aspect-[3/4] bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+          <div className="w-full aspect-[16/9] bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
             <span className="text-white text-sm">封面加载失败</span>
           </div>
         )}

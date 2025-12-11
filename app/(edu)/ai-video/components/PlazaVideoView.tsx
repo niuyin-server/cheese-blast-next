@@ -91,7 +91,7 @@ export default function PlazaVideoView() {
   }, [hasMore, isLoading, loadMore]);
 
   const breakpointColumnsObj = {
-    default: 6,
+    default: 4,
     1536: 5,
     1280: 4,
     1024: 3,
