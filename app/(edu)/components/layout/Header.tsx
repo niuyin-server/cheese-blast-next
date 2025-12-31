@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Bell, MessageCircle, Plus, Search } from 'lucide-react';
+import { Bell, MessageCircle, Plus, Search, X } from 'lucide-react';
 
 import ThemeToggle from '@/app/(edu)/components/layout/ThemeToggle';
 import UserHoverCard from '@/app/(edu)/components/profile/UserHoverCard';
@@ -17,6 +17,7 @@ const HOVER_DELAY = 100;
 const Header = ({ profile }: HeaderProps) => {
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,7 @@ const Header = ({ profile }: HeaderProps) => {
       if (searchInputRef.current !== document.activeElement) {
         setIsSearchFocused(false);
       }
-    }, 200);
+    }, 100);
   }, []);
 
   // 点击外部区域关闭popover
@@ -81,6 +82,14 @@ const Header = ({ profile }: HeaderProps) => {
     [profile.name],
   );
 
+  const handleClearSearch = useCallback(() => {
+    setSearchValue('');
+    if (searchInputRef.current) {
+      searchInputRef.current.value = '';
+      searchInputRef.current.focus();
+    }
+  }, []);
+
   return (
     <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--color-border-soft)] bg-[var(--color-header-bg)] px-4 pl-20 transition-all duration-300 backdrop-blur md:px-8 lg:pl-56">
       <div className="flex-1 max-w-xl">
@@ -88,15 +97,25 @@ const Header = ({ profile }: HeaderProps) => {
           <input
             ref={searchInputRef}
             type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder={searchPlaceholder}
             onFocus={handleSearchFocus}
             onBlur={handleSearchBlur}
-            className="w-full rounded-full border border-transparent bg-[var(--color-card)] py-2.5 pl-12 pr-4 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent)] group-hover:bg-[var(--color-surface)]"
+            className="w-full rounded-full border border-transparent bg-[var(--color-card)] py-2.5 pl-12 pr-20 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent)] group-hover:bg-[var(--color-surface)]"
           />
           <Search
             className="absolute left-4 top-2.5 text-[var(--color-text-tertiary)] transition-colors group-hover:text-[var(--color-text-secondary)]"
             size={18}
           />
+          {searchValue && (
+            <button
+              onClick={handleClearSearch}
+              className="absolute right-20 top-2.5 flex h-6 w-6 items-center justify-center rounded-full text-[var(--color-text-tertiary)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)] cursor-pointer"
+            >
+              <X size={14} />
+            </button>
+          )}
           <button className="absolute right-2 top-1.5 rounded-full cursor-pointer bg-[var(--color-accent)] px-3 py-1.5 text-xs text-[var(--color-accent-contrast)] transition-opacity hover:opacity-90">
             搜索
           </button>
@@ -110,6 +129,7 @@ const Header = ({ profile }: HeaderProps) => {
               }}
               onSearchClick={(keyword) => {
                 // 处理搜索点击
+                setSearchValue(keyword);
                 if (searchInputRef.current) {
                   searchInputRef.current.value = keyword;
                 }
