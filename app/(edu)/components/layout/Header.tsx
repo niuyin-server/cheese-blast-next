@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bell, MessageCircle, Plus, Search } from 'lucide-react';
 
 import ThemeToggle from '@/app/(edu)/components/layout/ThemeToggle';
 import UserHoverCard from '@/app/(edu)/components/profile/UserHoverCard';
+import SearchPopover from '@/app/(edu)/components/layout/SearchPopover';
 import type { UserProfile } from '@/types/content';
 
 type HeaderProps = {
@@ -15,7 +16,10 @@ const HOVER_DELAY = 100;
 
 const Header = ({ profile }: HeaderProps) => {
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const handleHoverChange = useCallback((active: boolean) => {
     if (hoverTimerRef.current) {
@@ -34,6 +38,44 @@ const Header = ({ profile }: HeaderProps) => {
     }
   }, []);
 
+  const handleSearchFocus = useCallback(() => {
+    setIsSearchFocused(true);
+  }, []);
+
+  const handleSearchBlur = useCallback((e: React.FocusEvent) => {
+    // 如果焦点移到了popover内部，不关闭
+    if (searchContainerRef.current?.contains(e.relatedTarget as Node)) {
+      return;
+    }
+    // 延迟关闭，允许点击popover内的元素
+    setTimeout(() => {
+      if (searchInputRef.current !== document.activeElement) {
+        setIsSearchFocused(false);
+      }
+    }, 200);
+  }, []);
+
+  // 点击外部区域关闭popover
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node) &&
+        searchInputRef.current !== document.activeElement
+      ) {
+        setIsSearchFocused(false);
+      }
+    };
+
+    if (isSearchFocused) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSearchFocused]);
+
   const searchPlaceholder = useMemo(
     () => `搜索知识点、课程、${profile.name}...`,
     [profile.name],
@@ -42,10 +84,13 @@ const Header = ({ profile }: HeaderProps) => {
   return (
     <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--color-border-soft)] bg-[var(--color-header-bg)] px-4 pl-20 transition-all duration-300 backdrop-blur md:px-8 lg:pl-56">
       <div className="flex-1 max-w-xl">
-        <div className="group relative">
+        <div ref={searchContainerRef} className="group relative">
           <input
+            ref={searchInputRef}
             type="text"
             placeholder={searchPlaceholder}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
             className="w-full rounded-full border border-transparent bg-[var(--color-card)] py-2.5 pl-12 pr-4 text-sm text-[var(--color-text-primary)] outline-none transition-all placeholder:text-[var(--color-text-tertiary)] focus:border-[var(--color-accent)] group-hover:bg-[var(--color-surface)]"
           />
           <Search
@@ -55,6 +100,24 @@ const Header = ({ profile }: HeaderProps) => {
           <button className="absolute right-2 top-1.5 rounded-full cursor-pointer bg-[var(--color-accent)] px-3 py-1.5 text-xs text-[var(--color-accent-contrast)] transition-opacity hover:opacity-90">
             搜索
           </button>
+          {isSearchFocused && (
+            <SearchPopover
+              onMouseEnter={() => {
+                // 保持popover打开
+              }}
+              onMouseLeave={() => {
+                // 不立即关闭，让blur事件处理
+              }}
+              onSearchClick={(keyword) => {
+                // 处理搜索点击
+                if (searchInputRef.current) {
+                  searchInputRef.current.value = keyword;
+                }
+                setIsSearchFocused(false);
+                console.log('Search:', keyword);
+              }}
+            />
+          )}
         </div>
       </div>
 
